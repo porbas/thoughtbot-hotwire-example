@@ -1,0 +1,32 @@
+<%= form_with(model: article, data: { controller: "form", action: "input->form#preview" }) do |form| %>
+  <% if article.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(article.errors.count, "error") %> prohibited this article from being saved:</h2>
+
+      <ul>
+        <% article.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :content %>
+    <%= form.text_area :content %>
+  </div>
+
+  <div class="field">
+    <strong>Preview:</strong>
+    <div id="article_preview">
+      <%= render partial: "articles/article", object: article %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+    <%= form.button "Preview Article", formaction: previews_path(render_into: "article_preview"),
+          name: "_method", value: "post",
+          data: { form_target: "preview" } %>
+  </div>
+<% end %>
