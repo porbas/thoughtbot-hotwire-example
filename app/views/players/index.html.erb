@@ -1,0 +1,34 @@
+<section class="grid gap-4">
+  <h1>Players</h1>
+
+  <%= render partial: "page", object: @page %>
+
+  <table data-controller="grid">
+    <thead>
+      <tr>
+        <% Player.headings.each do |heading| %>
+          <th>
+            <%= Player.human_attribute_name heading.name %>
+          </th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @players.each do |player| %>
+        <tr data-grid-target="row" data-action="keydown->grid#moveRow"
+            data-grid-directions-param="<%= html_escape({ ArrowDown: +1, ArrowUp: -1, PageDown: +10, PageUp: -10 }.to_json) %>">
+          <% Player.headings.each do |heading| %>
+            <td data-grid-target="column" data-action="focus->grid#captureFocus keydown->grid#moveColumn"
+                data-grid-boundaries-param="<%= html_escape({ Home: 0, End: 1 }.to_json) %>"
+                data-grid-directions-param="<%= html_escape({ ArrowRight: +1, ArrowLeft: -1 }.to_json) %>">
+              <%= render partial: heading.type.to_s, object: player[heading.name] %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= render partial: "page", object: @page %>
+</section>
