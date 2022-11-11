@@ -1,0 +1,39 @@
+<%= form_with(model: album) do |form| %>
+  <% if album.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(album.errors.count, "error") %> prohibited this album from being saved:</h2>
+
+      <ul>
+        <% album.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <fieldset data-controller="clone" data-clone-placeholder-value="id" data-clone-selector-value="input[type=file]">
+    <template data-clone-target="template">
+      <%= render "albums/photos/form", form: form, photo: ActiveStorage::Attachment.new, id: form.field_id(:photos, "{{ id }}") %>
+    </template>
+
+    <ul id="<%= form.field_id :photos_attachments %>" data-clone-target="output" data-turbo-permanent>
+      <% form.object.photos.each do |photo| %>
+        <%= render "albums/photos/form", form: form, photo: photo, id: form.field_id(:photos, photo.id) %>
+      <% end %>
+    </ul>
+
+    <%= form.label :photos %>
+    <%= form.file_field :photos, multiple: true, direct_upload: true,
+          data: { action: "input->clone#append" } %>
+    <%= form.hidden_field :photos, multiple: true, id: nil, value: nil %>
+  </fieldset>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

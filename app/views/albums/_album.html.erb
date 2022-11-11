@@ -1,0 +1,20 @@
+<div id="<%= dom_id album %>" class="scaffold_record">
+  <p>
+    <strong>Name:</strong>
+    <%= album.name %>
+  </p>
+
+  <ul>
+    <% album.photos.each do |photo| %>
+      <li>
+        <%= link_to photo do %>
+          <%= render "active_storage/attachments/attachment", attachment: photo %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+
+  <p>
+    <%= link_to "Show this album", album %>
+  </p>
+</div>
