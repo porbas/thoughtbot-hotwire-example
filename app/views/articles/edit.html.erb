@@ -1,0 +1,38 @@
+<%= form_with model: @article, class: "grid gap-2 max-w-prose m-auto" do |form| %>
+  <%= link_to "Back", article_path(@article) %>
+
+  <%= render "inline_fields", form: form, method: :name do %>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  <% end %>
+
+  <%= render "inline_fields", form: form, method: :byline do %>
+    <%= form.label :byline %>
+    <%= form.text_field :byline %>
+  <% end %>
+
+  <%= render "inline_fields", form: form, method: :published_on do %>
+    <%= form.label :published_on %>
+    <%= form.date_field :published_on %>
+  <% end %>
+
+  <%= render "inline_fields", form: form, method: :category_ids do %>
+    <fieldset>
+      <legend>
+        <%= @article.class.human_attribute_name(:category_ids) %>
+      </legend>
+
+      <%= form.collection_check_boxes :category_ids, Category.all, :id, :name do |builder| %>
+        <%= builder.check_box %>
+        <%= builder.label %>
+      <% end %>
+    </fieldset>
+  <% end %>
+
+  <%= render "inline_fields", form: form, method: :content do %>
+    <%= form.label :content %>
+    <%= form.rich_text_area :content %>
+  <% end %>
+
+  <%= form.button %>
+<% end %>

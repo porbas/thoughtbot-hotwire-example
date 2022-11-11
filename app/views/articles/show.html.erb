@@ -1,0 +1,33 @@
+<section class="grid gap-2 max-w-prose m-auto">
+  <%= link_to "Edit Article", edit_article_path(@article) %>
+
+  <%= render "inline_edit", model: @article, method: :name do %>
+    <h1><%= @article.name %></h1>
+  <% end %>
+
+  <%= render "inline_edit", model: @article, method: :byline do %>
+    <span>By: <%= @article.byline %></span>
+  <% end %>
+
+  <%= render "inline_edit", model: @article, method: :published_on do %>
+    <% if @article.published_on.nil? %>
+      <span>(Unpublished)</span>
+    <% else %>
+      <%= localize @article.published_on, format: :long %>
+    <% end %>
+  <% end %>
+
+  <%= render "inline_edit", model: @article, method: :category_ids do %>
+    <strong>Categories</strong>
+
+    <span>
+      <% @article.categories.each do |category| %>
+        <span><%= category.name %></span>
+      <% end %>
+    </span>
+  <% end %>
+
+  <%= render "inline_edit", model: @article, method: :content do %>
+    <%= @article.content %>
+  <% end %>
+</section>
