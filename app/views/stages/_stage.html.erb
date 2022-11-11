@@ -1,0 +1,64 @@
+<section id="<%= dom_id stage %>" class="row-end-auto flex flex-col overflow-y-scroll"
+    data-controller="drag"
+    data-scroll-target="container"
+    data-drag-accepting-class="opacity-25"
+    data-action="dragstart->drag#start scroll->scroll#track:passive">
+  <h2><%= stage.name %></h2>
+
+  <%= tag.ol class: "peer" do -%>
+    <% stage.cards.rank(:row_order).each do |card| %>
+      <li class="group" draggable="true" aria-dropeffect="move" data-action="dragover->drag#accept dragleave->drag#reject drop->drag#insert">
+        <template data-drag-target="template">
+          <input type="submit" formaction="<%= url_for [ stage.board, card ] %>" data-controller="autoclick autoremove" hidden>
+        </template>
+
+        <%= card.content %>
+
+        <%= form_with model: [ stage.board, card ] do |form| %>
+          <%= form.hidden_field :row_order_position, value: "up" %>
+
+          <button id="<%= dom_id card, :up %>" class="group-first-of-type:hidden" data-focus-target="item">
+            Move <%= card.name %> up
+          </button>
+        <% end %>
+
+        <%= form_with model: [ stage.board, card ] do |form| %>
+          <%= form.hidden_field :row_order_position, value: "down" %>
+
+          <button id="<%= dom_id card, :down %>" class="group-last-of-type:hidden" data-focus-target="item">
+            Move <%= card.name %> down
+          </button>
+        <% end %>
+
+        <%= form_with model: [ stage.board, card ] do |form| %>
+          <%= form.hidden_field :row_order_position, value: 0 %>
+
+          <%= form.label :stage_id do %>
+            Stages
+          <% end %>
+          <%= form.select :stage_id, stage.other_stages.pluck(:name, :id), data: { focus_target: "item" } %>
+          <button id="<%= dom_id card, :move %>" data-focus-target="item">
+            Move to Stage
+          </button>
+        <% end %>
+
+        <%= form_with model: [ stage.board, card ], data: { drag_target: "drop" } do |form| %>
+          <%= form.hidden_field :row_order_position, value: card.row_order_rank %>
+          <%= form.hidden_field :stage_id %>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+
+  <form method="post" class="hidden h-12 peer-empty:block" aria-dropeffect="move" data-drag-target="drop"
+      data-action="dragover->drag#accept dragleave->drag#reject drop->drag#insert">
+    <input type="hidden" name="_method" value="patch">
+
+    Move to <%= stage.name %>
+
+    <%= fields :card do |form| %>
+      <%= form.hidden_field :row_order_position, value: 0 %>
+      <%= form.hidden_field :stage_id, value: stage.id %>
+    <% end %>
+  </form>
+</section>

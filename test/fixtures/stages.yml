@@ -1,0 +1,16 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+todo:
+  name: To-do
+  column_order: 1
+  board: tasks
+
+doing:
+  name: Doing
+  column_order: 2
+  board: tasks
+
+done:
+  name: Done
+  column_order: 3
+  board: tasks
