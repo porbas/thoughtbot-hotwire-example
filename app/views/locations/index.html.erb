@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<%= render partial: "locations/leaflet", locals: {
+  locations: @locations,
+  geo_json_layer: render(template: "locations/index", formats: :json),
+  tile_layer: Rails.configuration.x.leaflet,
+} %>
+
+<section id="locations">
+  <h1>Locations</h1>
+
+  <%= render @locations %>
+</section>
+
+<%= link_to "New location", new_location_path %>

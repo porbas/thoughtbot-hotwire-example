@@ -1,0 +1,25 @@
+<%= tag.section data: {
+  controller: "leaflet",
+  leaflet_geo_json_layer_value: geo_json_layer,
+  leaflet_tile_layer_value: tile_layer,
+} do %>
+  <h1>Map</h1>
+
+  <template data-leaflet-target="template">
+    <% locations.each do |location| %>
+      <%= link_to location_path(location), id: dom_id(location, :marker) do %>
+        <span class="sr-only"><%= location.name %></span>
+        <%= inline_svg_tag "marker", class: "h-8 w-8" %>
+      <% end %>
+    <% end %>
+  </template>
+
+  <article class="w-full h-96" data-leaflet-target="map"
+    id="leaflet-map" data-turbo-permanent></article>
+
+  <form>
+    <button name="bbox" data-leaflet-target="bbox">
+      Search this area
+    </button>
+  </form>
+<% end %>
