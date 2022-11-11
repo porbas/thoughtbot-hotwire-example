@@ -1,0 +1,43 @@
+<section class="w-full max-w-lg">
+  <h1>New address</h1>
+
+  <%= render partial: "addresses/address", object: @address %>
+
+  <%= form_with model: @address, class: "flex flex-col gap-2" do |form| %>
+    <%= render partial: "errors", object: @address.errors %>
+
+    <fieldset class="contents" data-controller="search-params element">
+      <%= form.label :country %>
+      <%= form.select :country, @address.countries.invert, {}, autocomplete: "off",
+                      data: { action: "change->search-params#encode change->element#click" } %>
+
+      <noscript>
+        <button formmethod="get" formaction="<%= new_address_path %>">Select country</button>
+      </noscript>
+      <a href="<%= new_address_path %>" data-search-params-target="anchor" hidden
+              data-element-target="click" data-turbo-frame="<%= form.field_id(:state, :turbo_frame) %>"></a>
+    </fieldset>
+
+    <%= form.label :line_1 %>
+    <%= form.text_field :line_1 %>
+
+    <%= form.label :line_2 %>
+    <%= form.text_field :line_2 %>
+
+    <%= form.label :city %>
+    <%= form.text_field :city %>
+
+    <turbo-frame id="<%= form.field_id(:state, :turbo_frame) %>" class="contents">
+      <% if @address.states.any? %>
+        <%= form.label :state %>
+        <%= form.select :state, @address.states.invert %>
+      <% end %>
+      <%= turbo_stream.replace dom_id(@address), partial: "addresses/address", object: @address %>
+    </turbo-frame>
+
+    <%= form.label :postal_code %>
+    <%= form.text_field :postal_code %>
+
+    <%= form.button %>
+  <% end %>
+</section>
