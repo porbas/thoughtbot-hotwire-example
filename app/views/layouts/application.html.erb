@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>HotwireExampleTemplate</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <header data-controller="combobox">
+      <form action="<%= searches_path(turbo_frame: "search_results") %>" data-turbo-frame="search_results" class="peer"
+        data-controller="form" data-action="invalid->form#hideValidationMessage:capture input->form#submit">
+        <label for="search_query">Query</label>
+        <input id="search_query" name="query" type="search" pattern=".*\w+.*" required autocomplete="off"
+          data-combobox-target="input" data-action="focus->combobox#start focusout->combobox#stop">
+
+        <button data-form-target="submit">
+          Search
+        </button>
+      </form>
+
+      <turbo-frame id="search_results" target="_top" class="empty:hidden peer-invalid:hidden"></turbo-frame>
+    </header>
+
+    <main><%= yield %></main>
+  </body>
+</html>
